@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block body %}
+
+        <h1>Inside the User Page</h1>
+        <a href="#" id="userProfile">User Profile</a>
+        <div class="container" id="">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <h4 id="userMessage" style="color: red;"></h4>
+                    <div class="user-info-block">
+                        <h3>User Information</h3>
+                        <label class="info-label" style="font-weight: bold;">ID : </label><span id="user_id"></span><br/>
+                        <label class="info-label" style="font-weight: bold;">Name :  </label><span id="name"></span><br/>
+                        <label class="info-label" style="font-weight: bold;">Email :  </label><span id="email"></span><br/>
+                        <label class="info-label" style="font-weight: bold;">Address :  </label><span id="address"></span><br/>
+                        <label class="info-label" style="font-weight: bold;">Phone Number :  </label><span id="phone"></span><br/>
+                        <label class="info-label" style="font-weight: bold;">Registration Date :  </label><span id="reg_date"></span><br/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script src="../static/user_profile.js"></script>
+{% endblock %}

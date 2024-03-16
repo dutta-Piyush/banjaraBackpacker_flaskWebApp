@@ -3,7 +3,7 @@ import datetime
 from flask_restful import Resource, Api
 from flask import Blueprint, jsonify, request
 
-from ...models import db, BlogComment
+from ...models import db, Comment
 from ..token_validator.token_validator import token_required
 
 manageComments_bp = Blueprint('manageComments_bp', __name__)
@@ -17,7 +17,7 @@ class ManageComments(Resource):
         decoded_token = getattr(self, 'decoded_token', None)
         if decoded_token:
             # Logic for normal user for now
-            comment_obj = BlogComment.query.filter_by(commenter_id=decoded_token.get('user_id'),
+            comment_obj = Comment.query.filter_by(commenter_id=decoded_token.get('user_id'),
                                                       comment_id=form.get('comment_id')).first()
             if comment_obj:
                 comment_obj.comment = form.get('comment')
@@ -40,7 +40,7 @@ class ManageComments(Resource):
         form = request.json
         decoded_token = getattr(self, 'decoded_token', None)
         if decoded_token:
-            comment = BlogComment.query.filter_by(commenter_id=decoded_token.get('user_id'),
+            comment = Comment.query.filter_by(commenter_id=decoded_token.get('user_id'),
                                                   comment_id=form.get('comment_id')).first()
             if comment:
                 try:

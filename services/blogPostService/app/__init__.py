@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 
 from .models import db
 from .config import Config
@@ -10,6 +11,7 @@ from app.blueprints.manage_comments.view import manageComments_bp
 
 def blog_services():
     blog_service = Flask(__name__)
+    CORS(blog_service, supports_credentials=True, headers=['Content-Type', 'Authorization'], origin='http://localhost:5173')
 
     # register the blueprints
     blog_service.register_blueprint(create_bp)
