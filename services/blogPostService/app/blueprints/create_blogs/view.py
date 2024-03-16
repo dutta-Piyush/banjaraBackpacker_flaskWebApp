@@ -1,9 +1,10 @@
 import datetime
 
+from sqlalchemy import desc
 from flask_restful import Resource, Api
 from flask import Blueprint, request, jsonify, make_response
 
-from ...models import db, TravelBlog
+from ...models import db, Blog
 from ..token_validator.token_validator import token_required
 
 create_bp = Blueprint('create_bp', __name__)
@@ -12,10 +13,13 @@ api = Api(create_bp)
 
 class CreateBlog(Resource):
     def get(self):
-        blogs = TravelBlog.query.all()
+        blogs = Blog.query.order_by(desc(Blog.blog_date)).all()
         if blogs:
-            blogs_dict_list = [{'blog_id': blog.blog_id, 'blog_title': blog.blog_title,
-                                'place_name': blog.place_name, 'author_name': blog.author_name}
+            # blogs_dict_list = [{'blog_id': blog.blog_id, 'blog_title': blog.blog_title,
+            #                     'place_name': blog.place_name, 'author_name': blog.author_name}
+            #                    for blog in blogs]
+            blogs_dict_list = [{'blog_title': blog.blog_title, 'blog_body': blog.blog_body,
+                                'place_name': blog.place_name}
                                for blog in blogs]
             return jsonify(blogs_dict_list)
         else:
@@ -27,13 +31,13 @@ class CreateBlog(Resource):
         form = request.json
         decoded_token = getattr(self, 'decoded_token', None)
         if decoded_token:
-            blog_title = form.get('blog_title')
-            blog_body = form.get('blog_body')
-            place_name = form.get('place_name')
+            blog_title = form.get('title')
+            blog_body = form.get('body')
+            place_name = form.get('place')
             author_id = decoded_token['user_id']
             author_name = decoded_token['first_name'] + ' ' + decoded_token['last_name']
             blog_date = datetime.datetime.utcnow()
-            new_blog = TravelBlog(
+            new_blog = Blog(
                 blog_title=blog_title,
                 blog_body=blog_body,
                 place_name=place_name,

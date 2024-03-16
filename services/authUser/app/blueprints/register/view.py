@@ -1,9 +1,8 @@
 import uuid
 from datetime import datetime
 from flask_restful import Api, Resource
-from sqlalchemy.exc import IntegrityError
-from flask import Blueprint, jsonify, request
 from werkzeug.security import generate_password_hash
+from flask import Blueprint, jsonify, request, make_response
 
 from ...model import db, User
 
@@ -18,31 +17,39 @@ def get_current_date():
 
 
 class RegisterResource(Resource):
+
     def post(self):
         form = request.json
-        user = User.query.filter_by(email=form['email']).first()
+        print("User Form ", form)
+        user = User.query.filter_by(email=form.get('email')).first()
         if user:
-            return jsonify({'message': 'The user is already available'})
+            message = {'message': 'The user is already available! Please login'}
+            response = make_response(jsonify(message))
+            response.status_code = 401
+            return response
         else:
             new_user = User(
                 user_id=str(uuid.uuid4()),
-                first_name=form.get('first_name'),
-                last_name=form.get('last_name'),
+                user_role= 1, # form.get('user_role')
+                first_name=form.get('firstName'),
+                last_name=form.get('lastName'),
                 email=form.get('email'),
                 password=generate_password_hash(form.get('password')),
                 address=form.get('address'),
-                phone=form.get('phone_no'),
+                phone=int(form.get('phone')),
                 reg_date=get_current_date()
             )
-            print(new_user)
-            print(new_user.email)
             try:
                 db.session.add(new_user)
                 db.session.commit()
-                return jsonify({'message': 'The user is now registered'})
-            except IntegrityError as e:
-                db.session.rollback()  # Rollback the transaction in case of an error
-                return jsonify({'message': f'The user is not registered. Error: {e}'})
+                message = {'message': 'The user is now registered'}
+                return jsonify(message)
+            except Exception as e:
+                db.session.rollback()
+                message = {'message': f'The user is not registered. Error: {e}'}
+                print("Message", e)
+                response = make_response(message)
+                return response
 
 
 api.add_resource(RegisterResource, '/api/register')

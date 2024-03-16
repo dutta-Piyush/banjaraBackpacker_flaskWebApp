@@ -9,6 +9,7 @@ def token_required(func):
     @wraps(func)
     def wrapper(self, *args, **kargs):
         jwt_token = request.cookies.get('token')
+        # print("JWT Token inside wrapper of Blog Post Service -- ", jwt_token)
         if jwt_token:
             try:
                 decoded_token = jwt.decode(jwt_token, Config.SECRET_KEY, algorithms='HS256')
