@@ -1,2 +1,8 @@
 Excess files
+envBanjara
+*__pycache__/
+*.pyc
+*.iml
+services\authUser\.idea
+
 
