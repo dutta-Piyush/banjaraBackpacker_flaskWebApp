@@ -1,0 +1,16 @@
+.slide-from-top-to-bottom-container {
+    position: relative;
+    height: 100vh; /* Adjust as needed */
+    overflow: hidden;
+  }
+  
+  .slide-from-top-to-bottom-image {
+    position: absolute;
+    top: 0;
+    transition: top 0.5s ease; /* Add transition for top property */
+  }
+  
+  .slide-from-top-to-bottom-image.slide-in {
+    top: calc(50% - 80px); /* Adjust to position image at the center */
+  }
+  

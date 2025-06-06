@@ -1,0 +1,14 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "Banjara Backpacker DB",
+            "Group": "Servers",
+            "Host": "postgres",
+            "Port": 5432,
+            "MaintenanceDB": "banjara",
+            "Username": "postgres",
+            "SSLMode": "prefer",
+            "PassFile": "/pgpass"
+        }
+    }
+} 

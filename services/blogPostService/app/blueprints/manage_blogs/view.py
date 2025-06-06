@@ -15,6 +15,7 @@ class ManageBlogs(Resource):
     @token_required
     def get(self):
         decoded_token = getattr(self, 'decoded_token', None)
+        print("Decoded Token : ", decoded_token)
         blogs = Blog.query.filter_by(author_id=decoded_token.get('user_id')).order_by(desc(Blog.blog_date)).all()
         if decoded_token:
             blogs_dict = [{'blog_id': blog.blog_id, 'blog_title': blog.blog_title, 'blog_body': blog.blog_body,
