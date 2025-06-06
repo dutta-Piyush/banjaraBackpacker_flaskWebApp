@@ -38,6 +38,9 @@ class LoginResource(Resource):
                     }
                     jwt_token = jwt.encode(token_payload, Config.SECRET_KEY, algorithm='HS256')
                     print("JWT Token in login", jwt_token)
+                    # Convert bytes to string if needed
+                    if isinstance(jwt_token, bytes):
+                        jwt_token = jwt_token.decode('utf-8')
                     message = {'message': f'{existing_user.first_name}, You are now logged in!'}
                     response = make_response(message)
                     response.set_cookie('token', jwt_token, expires=expiration_time, secure=False, httponly=True,

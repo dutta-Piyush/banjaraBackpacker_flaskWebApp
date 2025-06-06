@@ -12,6 +12,7 @@ import EditUser from './Components/EditUser';
 import DeleteUser from './Components/DeleteUser';
 import Xfsadf from './Components/Xfsadf';
 import AuthChecker from './Components/AuthenticationChecker';
+import TestHome from './Components/TestHome';
 
 
 const router = createBrowserRouter([
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
     {
         path: '/xfsadf',
         element: <Xfsadf />
+    },
+    {
+        path: '/testHome',
+        element: <TestHome />
     }
     
 ]);

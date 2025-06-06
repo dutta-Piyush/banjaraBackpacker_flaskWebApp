@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  auth-service:
+    build: ./authUser
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - FLASK_APP=app
+      - FLASK_ENV=production
+    ports:
+      - "5001:5001"
+    depends_on:
+      - db
+    networks:
+      - banjaraBackpacker-network
+
+  blog-service:
+    build: ./blogPostService
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - FLASK_APP=app
+      - FLASK_ENV=production
+    ports:
+      - "5002:5002"
+    depends_on:
+      - db
+    networks:
+      - banjaraBackpacker-network
+
+  frontend-service:
+    build: ./frontendService
+    restart: always
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_AUTH_SERVICE_URL=http://auth-service:5001
+      - VITE_BLOG_SERVICE_URL=http://blog-service:5002
+      - VITE_HOST=0.0.0.0
+      - VITE_PORT=5173
+      - NODE_ENV=production
+    depends_on:
+      - auth-service
+      - blog-service
+    networks:
+      - banjaraBackpacker-network
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - banjaraBackpacker-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      - PGADMIN_SERVER_JSON_FILE=/pgadmin4/servers.json
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - banjaraBackpacker-network
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  banjaraBackpacker-network:
+    driver: bridge

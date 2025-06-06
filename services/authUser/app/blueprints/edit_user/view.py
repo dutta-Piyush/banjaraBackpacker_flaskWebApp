@@ -1,6 +1,6 @@
 import datetime
 
-import jwt
+from jwt import encode
 from flask_restful import Resource, Api
 from flask import Blueprint, request, jsonify, make_response
 from werkzeug.security import generate_password_hash
@@ -46,7 +46,7 @@ class EditUserResource(Resource):
                     'reg_date': str(user.reg_date),
                     'exp': expiration_time
                 }
-                jwt_token = jwt.encode(token_payload, Config.SECRET_KEY, algorithm='HS256')
+                jwt_token = encode(token_payload, Config.SECRET_KEY, algorithm='HS256')
                 print("JWT Token", jwt_token)
                 db.session.commit()
                 message = {'message': 'User data is updated'}

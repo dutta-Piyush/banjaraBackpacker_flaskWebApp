@@ -5,3 +5,4 @@ app = auth_service()
 
 with app.app_context():
     db.create_all()
+    print("Table Created")
